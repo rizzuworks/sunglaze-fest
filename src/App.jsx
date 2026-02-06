@@ -1,35 +1,61 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useEffect } from 'react';
+import Lenis from 'lenis'; // Pastikan import Lenis
+
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import Tagline from './components/Tagline';
+import Lineup from './components/Lineup';
+import Schedule from './components/Schedule';
+import Countdown from './components/Countdown';
+import Tickets from './components/Tickets';
+import Promo from './components/Promo';
+import Footer from './components/Footer';
+import CustomCursor from './components/CustomCursor';
 
 function App() {
-  const [count, setCount] = useState(0)
+  useEffect(() => {
+    // Inisialisasi Lenis
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Easing bawaan yang smooth
+      smooth: true,
+    });
+
+    // SIMPAN KE WINDOW AGAR BISA DIPAKAI DI NAVBAR
+    window.lenis = lenis;
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    return () => {
+      // Bersihkan saat unmount
+      window.lenis = null;
+      lenis.destroy();
+    };
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="bg-paper min-h-screen selection:bg-smooth selection:text-paper">
+       {/* ... Sisa kode sama ... */}
+       <div className="hidden md:block">
+         <CustomCursor />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+      <div className="fixed inset-0 bg-noise opacity-[0.08] pointer-events-none z-[100] mix-blend-overlay"></div>
+      
+      <Navbar />
+      <Hero />
+      <Tagline />
+      <Lineup />
+      <Schedule />
+      <Countdown />
+      <Tickets />
+      <Promo />
+      <Footer />
+    </div>
+  );
 }
 
-export default App
+export default App;
