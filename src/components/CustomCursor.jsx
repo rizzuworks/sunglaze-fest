@@ -1,19 +1,23 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
+import { motion, useSpring, useMotionValue } from 'motion/react';
 
 const CustomCursor = () => {
-  const mouse = useRef({ x: 0, y: 0 });
-  const circle = useRef({ x: 0, y: 0 });
-  
-  const dotRef = useRef(null);
-  const circleRef = useRef(null);
-  
   const [isHovered, setIsHovered] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const springConfig = { damping: 25, stiffness: 200, mass: 0.5 };
+  const circleX = useSpring(mouseX, springConfig);
+  const circleY = useSpring(mouseY, springConfig);
+
   useEffect(() => {
     const onMouseMove = (e) => {
-      mouse.current = { x: e.clientX, y: e.clientY };
-      setIsVisible(true);
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
+      
+      if (!isVisible) setIsVisible(true);
 
       const target = e.target;
       const isPointer = 
@@ -28,62 +32,53 @@ const CustomCursor = () => {
 
     const onMouseLeave = () => setIsVisible(false);
     const onMouseEnter = () => setIsVisible(true);
-    
-    const animate = () => {
-      const speed = 0.15; 
-      
-      circle.current.x += (mouse.current.x - circle.current.x) * speed;
-      circle.current.y += (mouse.current.y - circle.current.y) * speed;
-
-      if (dotRef.current) {
-        dotRef.current.style.transform = `translate3d(${mouse.current.x}px, ${mouse.current.y}px, 0) translate(-50%, -50%)`;
-      }
-
-      if (circleRef.current) {
-        circleRef.current.style.transform = `translate3d(${circle.current.x}px, ${circle.current.y}px, 0) translate(-50%, -50%)`;
-      }
-
-      requestAnimationFrame(animate);
-    };
 
     window.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseleave', onMouseLeave);
     document.addEventListener('mouseenter', onMouseEnter);
-    const animationId = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseleave', onMouseLeave);
       document.removeEventListener('mouseenter', onMouseEnter);
-      cancelAnimationFrame(animationId);
     };
-  }, []);
+  }, [isVisible]);
 
   return (
     <>
-      <div 
-        ref={dotRef}
-        className={`fixed top-0 left-0 w-2 h-2 bg-white rounded-full pointer-events-none z-[9999] mix-blend-difference transition-opacity duration-300
-          ${isVisible ? 'opacity-100' : 'opacity-0'}
-        `}
+      <motion.div
+        className="fixed top-0 left-0 w-2 h-2 bg-white rounded-full pointer-events-none z-[9999] mix-blend-difference"
+        style={{
+          x: mouseX,
+          y: mouseY,
+          translateX: "-50%",
+          translateY: "-50%",
+        }}
+        animate={{
+          opacity: isVisible ? 1 : 0,
+          scale: isHovered ? 0 : 1
+        }}
       />
 
-      <div 
-        ref={circleRef}
-        className={`fixed top-0 left-0 pointer-events-none z-[9998] mix-blend-difference transition-opacity duration-300 flex items-center justify-center
-          ${isVisible ? 'opacity-100' : 'opacity-0'}
-        `}
-      >
-        <div 
-          className={`
-            rounded-full border border-white transition-all duration-300 ease-out
-            ${isHovered 
-              ? 'w-20 h-20 bg-white opacity-100 scale-100'
-              : 'w-10 h-10 bg-transparent scale-100'
-            }
-          `}
-        ></div>
-      </div>
+      <motion.div
+        className="fixed top-0 left-0 pointer-events-none z-[9998] mix-blend-difference flex items-center justify-center border border-white rounded-full"
+        style={{
+          x: circleX,
+          y: circleY,
+          translateX: "-50%",
+          translateY: "-50%",
+        }}
+        animate={{
+          width: isHovered ? 80 : 40,
+          height: isHovered ? 80 : 40,
+          backgroundColor: isHovered ? "rgba(255, 255, 255, 1)" : "rgba(255, 255, 255, 0)",
+          opacity: isVisible ? 1 : 0,
+        }}
+        transition={{
+          type: "spring",
+          ...springConfig
+        }}
+      />
     </>
   );
 };
