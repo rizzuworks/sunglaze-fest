@@ -8,6 +8,7 @@ import Lineup from './components/Lineup';
 import Schedule from './components/Schedule';
 import Countdown from './components/Countdown';
 import Tickets from './components/Tickets';
+import Promo from './components/Promo';
 import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
 
@@ -51,6 +52,7 @@ function App() {
       <Schedule />
       <Countdown />
       <Tickets />
+      <Promo />
       <Footer />
     </div>
   );
