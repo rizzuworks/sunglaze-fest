@@ -7,9 +7,9 @@ const StaticSeparator = memo(({ delay }) => (
     whileInView={{ opacity: 0.2 }}
     viewport={{ once: true }}
     transition={{ duration: 0.8, delay: delay }}
-    className="flex items-center justify-center h-[60px] md:h-[130px] select-none"
+    className="flex items-center justify-center h-[50px] md:h-[130px] select-none"
   > 
-    <span className="font-serif italic text-4xl md:text-8xl text-ink leading-none translate-y-[-5%] md:translate-y-[-10%]">
+    <span className="font-serif italic text-2xl md:text-8xl text-ink leading-none">
       :
     </span>
   </motion.div>
@@ -23,7 +23,7 @@ const TimeUnit = memo(({ value, label, delay }) => (
     transition={{ duration: 0.8, delay: delay, ease: [0.16, 1, 0.3, 1] }}
     className="flex flex-col items-center mx-1 md:mx-4 group cursor-default"
   >
-    <div className="relative overflow-hidden h-[60px] md:h-[130px] flex items-center justify-center min-w-[1.2ch] md:min-w-[1.5ch]">
+    <div className="relative overflow-hidden h-[50px] md:h-[130px] flex items-center justify-center min-w-[2ch] md:min-w-[1.5ch]">
       <AnimatePresence mode="popLayout">
         <motion.span
           key={value}
@@ -31,13 +31,13 @@ const TimeUnit = memo(({ value, label, delay }) => (
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: "-100%", opacity: 0 }}
           transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
-          className="font-serif italic text-6xl md:text-9xl text-ink font-light group-hover:text-terra transition-colors duration-500 leading-none inline-block"
+          className="font-serif italic text-4xl md:text-9xl text-ink font-light group-hover:text-terra transition-colors duration-500 leading-none inline-block"
         >
           {value}
         </motion.span>
       </AnimatePresence>
     </div>
-    <span className="mt-4 font-sans text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] opacity-40 text-ink">
+    <span className="mt-2 md:mt-4 font-sans text-[8px] md:text-xs font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] opacity-40 text-ink">
       {label}
     </span>
   </motion.div>
@@ -81,20 +81,20 @@ const Countdown = () => {
   return (
     <section 
       id="countdown"
-      className="w-full bg-paper py-32 flex flex-col items-center justify-center border-y border-ink/5 overflow-hidden"
+      className="w-full bg-paper py-20 md:py-32 flex flex-col items-center justify-center border-y border-ink/5 overflow-hidden"
     >
       <motion.div 
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.8 }} 
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        className="pb-32 px-4 text-center"
+        className="pb-16 md:pb-32 px-4 text-center"
       >
-        <span className="font-sans text-xs uppercase tracking-[0.4em] mb-4 block text-terra opacity-60">
+        <span className="font-sans text-[10px] md:text-xs uppercase tracking-[0.4em] mb-4 block text-terra opacity-60">
           Counting Down
         </span>
         
-        <h2 className="font-serif text-4xl md:text-6xl text-ink">
+        <h2 className="font-serif text-3xl md:text-6xl text-ink">
           A <motion.span 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -107,7 +107,7 @@ const Countdown = () => {
         </h2>
       </motion.div>
 
-      <div className="flex justify-center items-start gap-1 md:gap-2">
+      <div className="flex justify-center items-start gap-0 md:gap-2">
         <TimeUnit value={timeLeft.days} label="Days" delay={0.1} />
         <StaticSeparator delay={0.2} />
         
