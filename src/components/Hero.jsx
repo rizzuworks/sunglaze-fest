@@ -1,120 +1,103 @@
-import React from 'react';
-import { motion } from 'motion/react';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'motion/react';
 
 const Hero = () => {
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"]
+  });
+
+  const xSun = useTransform(scrollYProgress, [0, 1], ["0%", "-150%"]);
+  const xGlaze = useTransform(scrollYProgress, [0, 1], ["0%", "150%"]);
+  const rotateSun = useTransform(scrollYProgress, [0, 1], [0, -45]);
+  const scaleImage = useTransform(scrollYProgress, [0, 1], [1, 1.5]);
+  const opacityOverlay = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
+
+  const handleScrollToLineup = (e) => {
+    e.preventDefault();
+    const targetId = "#lineup";
+    
+    if (window.lenis) {
+      window.lenis.scrollTo(targetId, {
+        duration: 1.5,
+        easing: (t) => 1 - Math.pow(1 - t, 4)
+      });
+    } else {
+      const target = document.querySelector(targetId);
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
-    <section className="relative w-full h-screen bg-paper flex flex-col items-center justify-between overflow-hidden">
-      
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute top-[-5%] left-[-10%] w-[70vw] h-[70vw] bg-terra/15 rounded-full blur-[140px]" />
-        <div className="absolute bottom-[10%] right-[-5%] w-[50vw] h-[50vw] bg-sand/25 rounded-full blur-[110px]" />
-        
+    <section 
+      ref={containerRef}
+      className="relative w-full h-screen bg-ink overflow-hidden"
+    >
+      <div className="absolute inset-0 z-0">
         <motion.div 
-          initial={{ scale: 1.1, opacity: 0 }}
-          animate={{ scale: 1, opacity: 0.3 }}
-          transition={{ duration: 3, ease: "easeOut" }}
-          className="w-full h-full grayscale-[20%] contrast-[1.1]"
+          style={{ scale: scaleImage }}
+          className="w-full h-full"
         >
           <img 
             src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?q=80&w=2076" 
-            alt="Bali Tropical Sunset"
-            className="w-full h-full object-cover"
+            alt="Bali"
+            className="w-full h-full object-cover brightness-75 contrast-125"
           />
         </motion.div>
-        <div className="absolute inset-0 bg-gradient-to-t from-paper via-transparent to-paper/30" />
+        <motion.div 
+          style={{ opacity: opacityOverlay }}
+          className="absolute inset-0 bg-terra mix-blend-multiply" 
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-ink/60 via-transparent to-ink" />
       </div>
 
-      <div className="relative z-20 w-full flex flex-col items-center pt-28 md:pt-36 px-4 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.8 }}
-          className="flex gap-3 mb-6 md:mb-8"
+      <div className="relative z-20 h-full w-full flex flex-col items-center justify-center select-none">
+        <motion.div 
+          style={{ x: xSun, rotate: rotateSun }}
+          className="flex flex-col items-center"
         >
-          <span className="font-sans text-[10px] md:text-xs uppercase tracking-[0.4em] py-2 px-6 border border-ink/10 rounded-full backdrop-blur-sm">
-            July 24 — 25
-          </span>
-          <span className="font-sans text-[10px] md:text-xs uppercase tracking-[0.4em] py-2 px-6 bg-terra text-paper rounded-full shadow-lg shadow-terra/20">
-            2026 Edition
-          </span>
+          <h1 className="font-serif text-[30vw] md:text-[22vw] leading-none text-paper tracking-tighter">
+            SUN
+          </h1>
         </motion.div>
 
-        <div className="relative mb-6 md:mb-10">
-          <motion.h1 
-            className="font-serif text-[16vw] md:text-[13vw] leading-[0.75] text-ink flex flex-col items-center select-none"
-          >
-            <motion.span 
-              initial={{ y: 60, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-            >
-              SUN
-            </motion.span>
-            
-            <span className="relative inline-block">
-              <motion.span 
-                initial={{ y: 60, opacity: 0, skewX: 0 }}
-                animate={{ y: 0, opacity: 1, skewX: -12 }}
-                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
-                className="italic text-terra tracking-tighter"
-              >
-                GLAZE.
-              </motion.span>
-              
-              <motion.div 
-                initial={{ rotate: 0, scale: 0.5, opacity: 0 }}
-                animate={{ rotate: 180, scale: 1, opacity: 1 }}
-                transition={{ delay: 0.8, duration: 2, ease: "easeOut" }}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[115%] h-[115%] border border-sand/30 rounded-full -z-10"
-                style={{ borderStyle: 'double' }}
-              />
-            </span>
-          </motion.h1>
-        </div>
+        <motion.div 
+          style={{ x: xGlaze }}
+          className="mt-[-8vw] md:mt-[-5vw] md:ml-[15vw]"
+        >
+          <h1 className="font-serif italic text-[28vw] md:text-[20vw] leading-none text-terra tracking-tighter drop-shadow-2xl">
+            GLAZE.
+          </h1>
+        </motion.div>
       </div>
 
-      <div className="relative z-20 w-full flex flex-col items-center pb-8 md:pb-12 px-4 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1, duration: 0.8 }}
-          className="flex flex-col items-center gap-3"
-        >
-          <p className="font-sans text-[9px] md:text-[10px] uppercase tracking-[0.6em] text-ink/40">
-            Hosted at the sanctuary of
-          </p>
-          
-          <div className="flex flex-col items-center mb-6 md:mb-8">
-            <h3 className="font-serif italic text-2xl md:text-3xl text-terra mb-1">
-              Melasti Beach
-            </h3>
-            <div className="flex items-center gap-3">
-              <div className="h-[1px] w-4 bg-sand/40" />
-              <span className="font-sans text-[9px] md:text-[10px] uppercase tracking-[0.4em] text-ink/70">
-                Uluwatu, Bali
-              </span>
-              <div className="h-[1px] w-4 bg-sand/40" />
-            </div>
+      <div className="absolute bottom-12 left-0 w-full z-30 px-6 md:px-12 flex flex-col md:flex-row justify-between items-center md:items-end gap-10 md:gap-8">
+        <div className="flex flex-col items-center md:items-start text-center md:text-left">
+          <div className="flex gap-2 mb-4">
+            <span className="bg-sand text-ink text-[10px] font-bold px-3 py-1 uppercase tracking-widest">July 25/26</span>
+            <span className="border border-paper/30 text-paper text-[10px] px-3 py-1 uppercase backdrop-blur-md tracking-widest">Bali, ID</span>
           </div>
+          <p className="font-sans text-[10px] md:text-xs text-paper/60 uppercase tracking-[0.4em] max-w-[250px] md:max-w-[200px] leading-relaxed">
+            A sonic sanctuary at the edge of the world. Melasti Beach, Uluwatu.
+          </p>
+        </div>
 
-          <motion.div 
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-            className="flex flex-col items-center"
-          >
-            <span className="font-sans text-[9px] md:text-[10px] uppercase tracking-[0.5em] mb-3 opacity-40">Explore</span>
-            <div className="relative w-[1px] h-10 bg-ink/20 overflow-hidden">
-               <motion.div 
-                animate={{ y: [-40, 40] }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-                className="w-full h-full bg-ink"
-              />
-            </div>
-          </motion.div>
-        </motion.div>
+        <motion.a 
+          href="#lineup"
+          onClick={handleScrollToLineup}
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          className="flex flex-col items-center gap-4 cursor-pointer group"
+        >
+          <span className="font-sans text-[10px] text-sand uppercase tracking-[0.5em] group-hover:text-terra transition-colors">
+            Explore lineup
+          </span>
+          <div className="w-12 h-[1px] bg-sand group-hover:w-20 group-hover:bg-terra transition-all" />
+        </motion.a>
       </div>
 
-      <div className="absolute inset-0 bg-noise opacity-[0.05] pointer-events-none" />
+      <div className="absolute inset-0 bg-noise opacity-[0.08] pointer-events-none z-50" />
     </section>
   );
 };
