@@ -1,44 +1,16 @@
 @import "tailwindcss";
 
 @theme {
-  /* --- NEW PALETTE: GOLDEN HOUR (Smooth & Warm) --- */
-  
-  /* Background: Cream */
+  /* --- COLOR PALETTE --- */
   --color-paper: #FDFBF7;
-  
-  /* Text: Charcoal */
   --color-ink: #2C2825; 
-  
-  /* Accent 1: Terracotta */
   --color-terra: #E07A5F; 
-  
-  /* Accent 2: Sandy Gold */
   --color-sand: #D4A373;
-  
-  /* Accent 3: Muted Sage  */
   --color-sage: #81B29A;
 
   /* --- FONTS --- */
   --font-sans: 'Inter', sans-serif;
   --font-serif: 'PT Serif', serif;
-
-  /* --- ANIMATIONS --- */
-  --animate-marquee: marquee 30s linear infinite;
-  --animate-fadeIn: fadeIn 1.2s ease-out forwards;
-  --animate-slideUp: slideUp 0.8s ease-out forwards;
-
-  @keyframes marquee {
-    0% { transform: translateX(0%); }
-    100% { transform: translateX(-50%); }
-  }
-  @keyframes fadeIn {
-    0% { opacity: 0; transform: translateY(20px); }
-    100% { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes slideUp {
-    0% { opacity: 0; transform: translateY(40px); }
-    100% { opacity: 1; transform: translateY(0); }
-  }
 }
 
 @utility bg-noise {
@@ -47,6 +19,10 @@
 
 @utility clip-path-full {
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {

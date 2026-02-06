@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
+
 import LanaImg from '../assets/images/lana-del-rey-portrait.webp';
 import WaveToEarthImg from '../assets/images/wave-to-earth-portrait.webp';
 import YungKaiImg from '../assets/images/yung-kai-portrait.webp';
@@ -7,83 +9,39 @@ import RichBrianImg from '../assets/images/rich-brian-portrait.webp';
 import LauvImg from '../assets/images/lauv-portrait.webp';
 
 const Lineup = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
   const containerRef = useRef(null);
-
+  
   const artists = [
-    { 
-      name: "Lana Del Rey", 
-      img: LanaImg, 
-      quote: "Summertime, and the livin' is easy.", 
-      song: "Doin' Time" 
-    },
-    { 
-      name: "Lauv", 
-      img: LauvImg, 
-      quote: "I like me better when I'm with you.", 
-      song: "I Like Me Better" 
-    },
-    { 
-      name: "Niki", 
-      img: NikiImg, 
-      quote: "Baby, i fall in love every summertime.", 
-      song: "Every Summertime" 
-    },
-    { 
-      name: "Rich Brian", 
-      img: RichBrianImg, 
-      quote: "It's a hundred degrees, why you feelin' down?", 
-      song: "100 Degrees" 
-    },
-    { 
-      name: "Wave To Earth", 
-      img: WaveToEarthImg, 
-      quote: "Oh sunny day, it's like burnin' my youth.", 
-      song: "daisy" 
-    },
-    { 
-      name: "Yung Kai", 
-      img: YungKaiImg, 
-      quote: "I think I'll picture us, you with the waves.", 
-      song: "Blue" 
-    },
+    { name: "Lana Del Rey", img: LanaImg, quote: "Summertime, and the livin' is easy.", song: "Doin' Time" },
+    { name: "Lauv", img: LauvImg, quote: "I like me better when I'm with you.", song: "I Like Me Better" },
+    { name: "Niki", img: NikiImg, quote: "Baby, i fall in love every summertime.", song: "Every Summertime" },
+    { name: "Rich Brian", img: RichBrianImg, quote: "It's a hundred degrees, why you feelin' down?", song: "100 Degrees" },
+    { name: "Wave To Earth", img: WaveToEarthImg, quote: "Oh sunny day, it's like burnin' my youth.", song: "daisy" },
+    { name: "Yung Kai", img: YungKaiImg, quote: "I think I'll picture us, you with the waves.", song: "Blue" },
   ];
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!containerRef.current) return;
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
 
-      const { top, height } = containerRef.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      const scrollDistance = -top;
-      const totalScrollableHeight = height - windowHeight;
-      
-      let progress = scrollDistance / totalScrollableHeight;
-
-      if (progress < 0) progress = 0;
-      if (progress > 1) progress = 1;
-
-      const index = Math.floor(progress * artists.length);
-      const safeIndex = Math.min(index, artists.length - 1);
-
-      setActiveIndex(safeIndex);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [artists.length]);
+  const activeIndexRaw = useTransform(scrollYProgress, [0, 1], [0, artists.length - 1]);
+  
+  const [activeIndex, setActiveIndex] = React.useState(0);
+  
+  React.useEffect(() => {
+    return activeIndexRaw.on("change", (latest) => {
+      setActiveIndex(Math.round(latest));
+    });
+  }, [activeIndexRaw]);
 
   const handleArtistClick = (index) => {
-    if (!containerRef.current) return;
-
-    const { top, height } = containerRef.current.getBoundingClientRect();
-    const sectionTop = window.scrollY + top;
-    const totalScrollableHeight = height - window.innerHeight;
-    const segmentHeight = totalScrollableHeight / artists.length;
-    const targetScroll = sectionTop + (index * segmentHeight) + 5;
-
+    const sectionHeight = containerRef.current.offsetHeight;
+    const windowHeight = window.innerHeight;
+    const scrollTarget = containerRef.current.offsetTop + (index / (artists.length - 1)) * (sectionHeight - windowHeight);
+    
     window.scrollTo({
-      top: targetScroll,
+      top: scrollTarget,
       behavior: 'smooth'
     });
   };
@@ -93,91 +51,119 @@ const Lineup = () => {
       ref={containerRef} 
       id="lineup" 
       className="relative w-full bg-paper"
-      style={{ height: '300vh' }} 
+      style={{ height: '400vh' }}
     >
-      
       <div className="sticky top-0 w-full h-screen flex flex-col md:flex-row border-b border-ink/10 overflow-hidden">
         
         <div className="w-full md:w-1/2 h-full flex flex-col justify-center px-6 md:pl-20 md:pr-10 border-r border-ink/10 z-10 bg-paper">
           <div className="pb-12 px-4">
-            <span className="font-sans text-xs uppercase tracking-[0.4em] opacity-60 mb-4 block text-terra animate-pulse">Artist Lineup</span>
+            <motion.span 
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 0.6 }}
+              className="font-sans text-xs uppercase tracking-[0.4em] mb-4 block text-terra"
+            >
+              Artist Lineup
+            </motion.span>
             <h2 className="font-serif text-4xl md:text-6xl text-ink">Headliners</h2>
           </div>
 
-           <div className="flex flex-col">
-              {artists.map((artist, i) => (
-                <div 
-                  key={i}
-                  className="group flex items-baseline gap-6 transition-all duration-500 ease-out py-1 md:py-2"
+          <div className="flex flex-col">
+            {artists.map((artist, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }} 
+                transition={{ 
+                  duration: 0.8, 
+                  delay: i * 0.1,
+                  ease: [0.22, 1, 0.36, 1] 
+                }}
+                className="group flex items-baseline gap-6 py-1 md:py-2"
+              >
+                <motion.span 
+                  animate={{ 
+                    color: activeIndex === i ? "var(--color-terra)" : "var(--color-ink)",
+                    opacity: activeIndex === i ? 1 : 0.2,
+                    y: activeIndex === i ? -4 : 0
+                  }}
+                  className="font-sans text-xs font-bold"
                 >
-                  <span className={`font-sans text-xs font-bold transition-all duration-500
-                    ${activeIndex === i 
-                      ? 'text-terra opacity-100 -translate-y-2'
-                      : 'text-ink opacity-20 group-hover:opacity-40'}
-                  `}>
-                    0{i+1}
-                  </span>
-
-                  <h3 
-                    onClick={() => handleArtistClick(i)} 
-                    className={`font-serif text-5xl md:text-7xl lg:text-8xl leading-[0.85] cursor-pointer transition-all duration-500 origin-left tracking-tight
-                      ${activeIndex === i 
-                        ? 'text-ink italic translate-x-4 opacity-100' 
-                        : 'text-ink opacity-10 hover:opacity-30 blur-[2px] hover:blur-0 scale-95' 
-                      }
-                  `}>
-                      {artist.name}
-                  </h3>
-                </div>
-              ))}
-           </div>
+                  0{i+1}
+                </motion.span>
+                <motion.h3 
+                  onClick={() => handleArtistClick(i)} 
+                  animate={{ 
+                    skewX: activeIndex === i ? -10 : 0,
+                    x: activeIndex === i ? 20 : 0,
+                    opacity: activeIndex === i ? 1 : 0.1,
+                    filter: activeIndex === i ? "blur(0px)" : "blur(2px)",
+                    scale: activeIndex === i ? 1 : 0.95
+                  }}
+                  whileHover={{ opacity: 0.4, filter: "blur(0px)" }}
+                  className="font-serif text-5xl md:text-7xl lg:text-8xl leading-[0.85] cursor-pointer origin-left tracking-tight text-ink"
+                >
+                  {artist.name}
+                </motion.h3>
+              </motion.div>
+            ))}
+          </div>
         </div>
 
         <div className="hidden md:flex w-1/2 h-full items-center justify-center bg-sand/10 relative">
-           
           <div className="absolute w-[60%] aspect-[3/4] border border-ink/10 z-0"></div>
 
-          <div className="relative w-[55%] aspect-[3/4] bg-paper shadow-2xl z-10 p-4 pb-20 md:p-6 md:pb-24 -rotate-2 transition-transform duration-700 ease-out">
-            
+          <motion.div 
+            animate={{ rotate: -2 }}
+            className="relative w-[55%] aspect-[3/4] bg-paper shadow-2xl z-10 p-4 pb-20 md:p-6 md:pb-24"
+          >
             <div className="w-full h-full relative overflow-hidden bg-ink/5">
-              {artists.map((artist, i) => (
-                <div 
-                  key={i}
-                  className={`absolute inset-0 transition-all duration-1000 ease-[0.22,1,0.36,1]
-                    ${activeIndex === i 
-                      ? 'opacity-100 scale-100 z-10 clip-path-full' 
-                      : 'opacity-0 scale-110 z-0'
-                    }
-                  `}
+              <AnimatePresence mode="wait">
+                <motion.div 
+                  key={activeIndex}
+                  initial={{ clipPath: 'inset(100% 0 0 0)', scale: 1.1 }}
+                  animate={{ clipPath: 'inset(0% 0 0 0)', scale: 1 }}
+                  exit={{ clipPath: 'inset(0 0 100% 0)', scale: 1.05 }}
+                  transition={{ 
+                    duration: 0.4, 
+                    ease: [0.33, 1, 0.68, 1]
+                  }}
+                  className="absolute inset-0"
                 >
                   <img 
-                    src={artist.img}
-                    alt={artist.name}
+                    src={artists[activeIndex].img}
+                    alt={artists[activeIndex].name}
                     className="w-full h-full object-cover grayscale-[0.2] sepia-[0.1]"
                   />
                   <div className="absolute inset-0 bg-noise opacity-30 mix-blend-overlay pointer-events-none"></div>
-                </div>
-              ))}
+                </motion.div>
+              </AnimatePresence>
             </div>
 
-            <div className="absolute bottom-0 left-0 w-full h-20 md:h-24 flex flex-col items-center justify-center px-6 text-center">
-                
-              <p className="font-serif italic text-lg md:text-xl text-ink/90 leading-tight line-clamp-2">
-                "{artists[activeIndex].quote}"
-              </p>
-              
-              <div className="flex items-center gap-2 mt-2 opacity-50">
-                <span className="w-8 h-[1px] bg-ink"></span>
-                <span className="font-sans text-[9px] uppercase tracking-widest text-ink font-semibold">
-                  {artists[activeIndex].song}
-                </span>
-                <span className="w-8 h-[1px] bg-ink"></span>
-              </div>
-
+            <div className="absolute bottom-0 left-0 w-full h-20 md:h-24 flex flex-col items-center justify-center px-6 text-center overflow-hidden">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeIndex}
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -20, opacity: 0 }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <p className="font-serif italic text-lg md:text-xl text-ink/90 leading-tight line-clamp-2">
+                    "{artists[activeIndex].quote}"
+                  </p>
+                  
+                  <div className="flex items-center gap-2 mt-2 opacity-50 justify-center">
+                    <span className="w-8 h-[1px] bg-ink"></span>
+                    <span className="font-sans text-[9px] uppercase tracking-widest text-ink font-semibold">
+                      {artists[activeIndex].song}
+                    </span>
+                    <span className="w-8 h-[1px] bg-ink"></span>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
             </div>
-
-          </div>
-
+          </motion.div>
         </div>
 
       </div>
