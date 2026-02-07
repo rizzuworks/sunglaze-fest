@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'motion/react';
+import React, { useRef, useMemo } from 'react';
+import { motion, useScroll, useTransform, useSpring } from 'motion/react';
 
 const Hero = () => {
   const containerRef = useRef(null);
@@ -8,11 +8,19 @@ const Hero = () => {
     offset: ["start start", "end start"]
   });
 
-  const xSun = useTransform(scrollYProgress, [0, 1], ["0%", "-150%"]);
-  const xGlaze = useTransform(scrollYProgress, [0, 1], ["0%", "150%"]);
-  const rotateSun = useTransform(scrollYProgress, [0, 1], [0, -45]);
-  const scaleImage = useTransform(scrollYProgress, [0, 1], [1, 1.5]);
-  const opacityOverlay = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
+  const xSun = useTransform(smoothProgress, [0, 1], ["0%", isMobile ? "-40%" : "-150%"]);
+  const xGlaze = useTransform(smoothProgress, [0, 1], ["0%", isMobile ? "40%" : "150%"]);
+  const rotateSun = useTransform(smoothProgress, [0, 1], [0, isMobile ? -15 : -45]);
+  const scaleImage = useTransform(smoothProgress, [0, 1], [1, 1.3]);
+  const opacityOverlay = useTransform(smoothProgress, [0, 0.5], [0, 1]);
 
   const handleScrollToLineup = (e) => {
     e.preventDefault();
@@ -32,30 +40,31 @@ const Hero = () => {
   return (
     <section 
       ref={containerRef}
-      className="relative w-full h-screen bg-ink overflow-hidden"
+      className="relative w-full h-[100svh] bg-ink overflow-hidden"
     >
       <div className="absolute inset-0 z-0">
         <motion.div 
           style={{ scale: scaleImage }}
-          className="w-full h-full"
+          className="w-full h-full will-change-transform"
         >
           <img 
             src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?q=80&w=2076" 
             alt="Bali"
+            loading="eager"
             className="w-full h-full object-cover brightness-75 contrast-125"
           />
         </motion.div>
         <motion.div 
           style={{ opacity: opacityOverlay }}
-          className="absolute inset-0 bg-terra mix-blend-multiply" 
+          className="absolute inset-0 bg-terra mix-blend-multiply pointer-events-none" 
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-ink/60 via-transparent to-ink" />
+        <div className="absolute inset-0 bg-gradient-to-b from-ink/60 via-transparent to-ink pointer-events-none" />
       </div>
 
       <div className="relative z-20 h-full w-full flex flex-col items-center justify-center select-none">
         <motion.div 
           style={{ x: xSun, rotate: rotateSun }}
-          className="flex flex-col items-center"
+          className="flex flex-col items-center will-change-transform"
         >
           <h1 className="font-serif text-[30vw] md:text-[22vw] leading-none text-paper tracking-tighter">
             SUN
@@ -64,7 +73,7 @@ const Hero = () => {
 
         <motion.div 
           style={{ x: xGlaze }}
-          className="mt-[-8vw] md:mt-[-5vw] md:ml-[15vw]"
+          className="mt-[-8vw] md:mt-[-5vw] md:ml-[15vw] will-change-transform"
         >
           <h1 className="font-serif italic text-[28vw] md:text-[20vw] leading-none text-terra tracking-tighter drop-shadow-2xl">
             GLAZE.
@@ -86,8 +95,8 @@ const Hero = () => {
         <motion.a 
           href="#lineup"
           onClick={handleScrollToLineup}
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           className="flex flex-col items-center gap-4 cursor-pointer group"
         >
           <span className="font-sans text-[10px] text-sand uppercase tracking-[0.5em] group-hover:text-terra transition-colors">
@@ -97,7 +106,7 @@ const Hero = () => {
         </motion.a>
       </div>
 
-      <div className="absolute inset-0 bg-noise opacity-[0.08] pointer-events-none z-50" />
+      <div className="absolute inset-0 bg-noise opacity-[0.04] md:opacity-[0.08] pointer-events-none z-50" />
     </section>
   );
 };

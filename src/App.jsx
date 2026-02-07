@@ -63,8 +63,8 @@ function App() {
           <Tagline />
           <Lineup />
           <Schedule />
-          <Countdown />
           <Tickets />
+          <Countdown />
           <Promo />
           <Footer />
         </motion.div>

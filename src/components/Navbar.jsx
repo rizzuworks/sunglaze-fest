@@ -138,7 +138,7 @@ const Navbar = () => {
                   transition={{ delay: i * 0.1 }}
                   href={item.href}
                   onClick={(e) => handleNavClick(e, item.href)}
-                  className="font-serif text-4xl italic text-paper hover:text-terra transition-colors"
+                  className="text-3xl text-paper hover:text-terra transition-colors"
                 >
                   {item.label}
                 </motion.a>

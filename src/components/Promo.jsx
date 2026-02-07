@@ -29,9 +29,9 @@ const Promo = () => {
           <motion.div 
             animate={{ x: ["0%", "-50%"] }}
             transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-            className="flex whitespace-nowrap w-max"
+            className="flex whitespace-nowrap w-max will-change-transform"
           >
-            {[...Array(8)].map((_, i) => (
+            {[...Array(typeof window !== 'undefined' && window.innerWidth < 768 ? 4 : 8)].map((_, i) => (
               <span
                 key={i} 
                 className="font-sans text-[10px] md:text-sm font-bold uppercase tracking-[0.3em] inline-block"
@@ -48,7 +48,7 @@ const Promo = () => {
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, amount: 0.8 }}
+          viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 1 }}
           className="text-center md:text-left"
         >
@@ -69,18 +69,11 @@ const Promo = () => {
         <motion.div 
           initial={{ opacity: 0, x: 50 }}
           whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, amount: 0.8 }}
+          viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 1, delay: 0.2 }}
           className="relative w-full"
         >
-          <motion.div 
-            animate={{ 
-              scale: [1, 1.15, 1],
-              opacity: [0.1, 0.2, 0.1]
-            }}
-            transition={{ duration: 4, repeat: Infinity }}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] h-[80%] bg-terra rounded-full blur-[60px] md:blur-[100px] pointer-events-none"
-          />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] h-[80%] bg-terra rounded-full blur-[60px] md:blur-[120px] opacity-20 pointer-events-none"/>
 
           <form onSubmit={handleSubmit} className="relative z-10 flex flex-col gap-6 w-full">
             <div className="group relative">
