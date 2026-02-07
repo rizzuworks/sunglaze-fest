@@ -1,40 +1,48 @@
 import React from 'react';
 import { motion } from 'motion/react';
 
-const Preloader = () => {
+const Preloader = ({ setComplete }) => {
   return (
     <motion.div
       key="loader-container"
-      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-paper"
+      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-paper will-change-transform"
       initial={{ opacity: 1 }}
       exit={{ 
         y: "-100%", 
-        transition: { duration: 0.8, ease: [0.87, 0, 0.13, 1] } 
+        transition: { 
+          duration: 0.8,
+          ease: [0.76, 0, 0.24, 1]
+        } 
       }}
     >
-      <div className="w-48 flex flex-col items-center">
-        <div className="w-full h-[4px] bg-ink/10 relative overflow-hidden mb-3">
+      <div className="w-56 md:w-64 flex flex-col items-center">
+        <div className="w-full h-[3px] md:h-[4px] bg-ink/5 relative overflow-hidden mb-4">
           <motion.div 
-            className="absolute inset-y-0 left-0 bg-terra w-full"
+            className="absolute inset-y-0 left-0 bg-terra w-full will-change-transform"
             style={{ originX: 0 }} 
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
             transition={{ 
-              duration: 2, 
-              ease: "easeInOut",
-              repeat: Infinity 
+              duration: 2.5, 
+              ease: "circOut",
             }}
+            onAnimationComplete={() => setComplete?.(true)}
           />
         </div>
         
-        <motion.p
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="w-full text-terra tracking-[0.2em] text-[10px] font-bold uppercase text-center"
+          transition={{ delay: 0.2 }}
+          className="w-full text-center"
         >
-          Loading Experience
-        </motion.p>
+          <p className="text-terra tracking-[0.3em] text-[9px] md:text-[10px] font-bold uppercase whitespace-nowrap">
+            Loading Experience
+          </p>
+        </motion.div>
       </div>
+
+      <div className="absolute inset-0 bg-noise opacity-[0.03] pointer-events-none" />
     </motion.div>
   );
 };

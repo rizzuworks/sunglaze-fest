@@ -26,11 +26,14 @@ const Tickets = () => {
   ];
 
   return (
-    <section id="tickets" className="py-24 md:py-32 px-4 md:px-20 bg-sand/10 text-ink">
+    <section 
+      id="tickets" 
+      className="py-24 md:py-32 px-4 md:px-20 bg-sand/10 text-ink"
+    >
       <motion.div 
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.2 }} // Trigger saat 20% header terlihat
+        viewport={{ once: true, amount: 0.8 }}
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
         className="pb-16 md:pb-24 px-4 text-center"
       >
@@ -43,7 +46,7 @@ const Tickets = () => {
           <motion.span 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.8 }}
             transition={{ delay: 0.5, duration: 1, ease: "easeOut" }}
             className="italic text-sand inline-block"
           >
@@ -72,7 +75,6 @@ const Tickets = () => {
               onMouseLeave={() => window.innerWidth >= 768 && setActiveId(null)}
               className="relative w-full border-b border-ink/10 cursor-pointer overflow-hidden"
             >
-              {/* Background Fill */}
               <motion.div 
                 className="absolute inset-0 bg-ink z-0"
                 animate={{ y: isOpen ? "0%" : "100%" }}
