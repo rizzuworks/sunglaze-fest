@@ -41,7 +41,7 @@ const Tickets = () => {
           Secure Your Spot
         </span>
         
-        <h2 className="font-serif text-3xl md:text-6xl text-ink">
+        <h2 className="font-serif text-3xl md:text-5xl 2xl:text-6xl text-ink">
           Get Your Tickets&nbsp;
           <motion.span 
             initial={{ opacity: 0, y: 20 }}
@@ -96,7 +96,7 @@ const Tickets = () => {
                         skewX: isOpen ? -10 : 0,
                         x: isOpen ? 10 : 0 
                       }}
-                      className="font-serif text-3xl md:text-7xl leading-none origin-left"
+                      className="font-serif text-3xl md:text-6xl 2xl:text-7xl leading-none origin-left"
                     >
                       {ticket.name}
                     </motion.h3>

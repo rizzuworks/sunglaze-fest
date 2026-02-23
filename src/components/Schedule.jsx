@@ -40,12 +40,12 @@ const Schedule = () => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.8 }}
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        className="py-24 px-4 text-center border-b border-ink/10"
+        className="py-16 2xl:py-24 px-4 text-center border-b border-ink/10"
       >
         <span className="font-sans text-xs uppercase tracking-[0.4em] opacity-60 mb-4 block text-terra">
           Don't Miss a Beat
         </span>
-        <h2 className="font-serif text-4xl md:text-6xl text-ink">The Schedule</h2>
+        <h2 className="font-serif text-4xl md:text-5xl 2xl:text-6xl text-ink">The Schedule</h2>
       </motion.div>
 
       <div className="relative">
@@ -62,14 +62,14 @@ const Schedule = () => {
                   viewport={{ once: true, amount: 0.8 }}
                 >
                   <span className="block font-sans text-[10px] md:text-xs uppercase tracking-[0.3em] opacity-60 mb-1">Day {session.id}</span>
-                  <h2 className="font-serif text-2xl md:text-6xl italic leading-none">{session.title}</h2>
+                  <h2 className="font-serif text-2xl md:text-5xl 2xl:text-6xl italic leading-none">{session.title}</h2>
                 </motion.div>
                 
                 <motion.div 
                   initial={{ opacity: 0, x: 20 }}
                   whileInView={{ opacity: 0.6, x: 0 }}
                   viewport={{ once: true, amount: 0.8 }}
-                  className="font-sans text-xs md:text-xl font-bold tracking-widest"
+                  className="font-sans text-xs md:text-lg 2xl:text-xl font-bold tracking-widest"
                 >
                   {session.date}
                 </motion.div>
@@ -118,7 +118,7 @@ const Schedule = () => {
                     </motion.div>
                     
                     <motion.div 
-                      className="col-span-8 md:col-span-9 font-serif text-3xl md:text-6xl lg:text-7xl leading-none z-10 origin-left italic"
+                      className="col-span-8 md:col-span-9 font-serif text-3xl md:text-5xl 2xl:text-6xl leading-none z-10 origin-left italic"
                       variants={{ 
                         hover: { 
                           x: 20, 

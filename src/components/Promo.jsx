@@ -34,7 +34,7 @@ const Promo = () => {
             {[...Array(typeof window !== 'undefined' && window.innerWidth < 768 ? 4 : 8)].map((_, i) => (
               <span
                 key={i} 
-                className="font-sans text-[10px] md:text-sm font-bold uppercase tracking-[0.3em] inline-block"
+                className="font-sans text-[10px] md:text-sm font-bold uppercase tracking-[0.3em] inline-block pl-2"
               >
                 {marqueeText}
               </span>
@@ -55,7 +55,7 @@ const Promo = () => {
           <span className="font-sans text-[10px] md:text-xs uppercase tracking-[0.4em] opacity-60 mb-4 block text-sand">
             The Inner Circle
           </span>
-          <h2 className="font-serif text-4xl md:text-7xl leading-tight mb-6">
+          <h2 className="font-serif text-4xl md:text-6xl 2xl:text-7xl leading-tight mb-6">
             Don't miss the <br className="hidden md:block" />
             <span className="italic text-terra inline-block">golden hour.</span>
           </h2>

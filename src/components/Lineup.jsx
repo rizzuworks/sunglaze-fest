@@ -63,7 +63,7 @@ const Lineup = () => {
         >
           <motion.div 
             animate={{ rotate: -1.5 }}
-            className="relative w-[65%] sm:w-[50%] md:w-[60%] lg:w-[55%] aspect-[3/4] bg-paper shadow-2xl p-3 pb-12 md:p-6 md:pb-24 z-10"
+            className="relative w-[70%] sm:w-[50%] md:w-[65%] 2xl:w-[55%] aspect-[3/4] bg-paper shadow-2xl p-3 pb-12 md:p-6 md:pb-24 z-10"
           >
             <div className="w-full h-full relative overflow-hidden bg-ink/5">
               <AnimatePresence mode="wait">
@@ -93,7 +93,7 @@ const Lineup = () => {
                   exit={{ opacity: 0, y: -10 }}
                   className="flex flex-col items-center"
                 >
-                  <p className="font-serif italic text-[11px] sm:text-sm md:text-xl text-ink/90 leading-tight line-clamp-2">
+                  <p className="font-serif italic text-[11px] sm:text-sm md:text-lg 2xl:text-xl text-ink/90 leading-tight line-clamp-2">
                     "{artists[activeIndex].quote}"
                   </p>
                   <div className="flex items-center gap-2 mt-1 md:mt-2 opacity-50 justify-center">
@@ -120,7 +120,7 @@ const Lineup = () => {
             <span className="font-sans text-[10px] md:text-xs uppercase tracking-[0.4em] mb-1 md:mb-2 block text-terra font-bold">
               Artist Lineup
             </span>
-            <h2 className="font-serif text-2xl md:text-6xl text-ink tracking-tight">Headliners</h2>
+            <h2 className="font-serif text-2xl md:text-5xl 2xl:text-6xl text-ink tracking-tight">Headliners</h2>
           </div>
 
           <div className="flex flex-col">
@@ -151,7 +151,7 @@ const Lineup = () => {
                     fontStyle: activeIndex === i ? 'italic' : 'normal'
                   }}
                   whileHover={{ opacity: 0.4 }}
-                  className="font-serif text-3xl sm:text-5xl md:text-7xl lg:text-8xl leading-[1.1] md:leading-[0.9] cursor-pointer origin-left tracking-tight text-ink"
+                  className="font-serif text-3xl sm:text-5xl md:text-7xl 2xl:text-8xl leading-[1.1] md:leading-[0.9] cursor-pointer origin-left tracking-tight text-ink"
                 >
                   {artist.name}
                 </motion.h3>
