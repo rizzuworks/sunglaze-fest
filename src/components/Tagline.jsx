@@ -9,7 +9,7 @@ const Tagline = () => {
   const content = words.join("  •  ");
 
   return (
-    <div className="w-full py-6 md:py-10 bg-terra text-paper border-y border-paper/10 overflow-hidden relative z-20">
+    <div className="w-full py-6 lg:py-8 2xl:py-10 bg-terra text-paper border-y border-paper/10 overflow-hidden relative z-20">
       <motion.div 
         className="flex whitespace-nowrap"
         animate={{ x: ["0%", "-50%"] }}
@@ -20,9 +20,9 @@ const Tagline = () => {
         }}
       >
         {[...Array(4)].map((_, i) => (
-          <span key={i} className="font-serif text-2xl md:text-5xl italic font-light tracking-[0.1em] flex items-center">
+          <span key={i} className="font-serif text-2xl xl:text-3xl 2xl:text-5xl italic font-light tracking-[0.1em] flex items-center">
             {content}
-            <span className="mx-4 md:mx-6"> • </span>
+            <span className="mx-2 2xl:mx-6"> • </span>
           </span>
         ))}
       </motion.div>

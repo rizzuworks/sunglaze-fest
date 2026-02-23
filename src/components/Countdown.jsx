@@ -94,7 +94,7 @@ const Countdown = () => {
           Counting Down
         </span>
         
-        <h2 className="font-serif text-3xl md:text-6xl text-ink">
+        <h2 className="font-serif text-3xl md:text-5xl 2xl:text-6xl text-ink">
           A <motion.span 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
